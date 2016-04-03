@@ -1,4 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.Scanner;
 
 /**
  * Created by xinnacai on 4/3/16.
@@ -7,7 +10,7 @@ import java.util.HashMap;
 public class SimilarityMatrix {
     private String matrixName;
     private double[][] matrix;
-    private HashMap<String, Integer> indexMap = new HashMap<>();// Map attribute name to matrix index number
+    private HashMap<String, Integer> hm = new HashMap<>();// Map attribute name to matrix index number
 
     /**
      * initialize similarity matrix.
@@ -15,6 +18,68 @@ public class SimilarityMatrix {
      */
     SimilarityMatrix(String fileName) {
 
+		Scanner scanner = null;
+		File file = new File(fileName);
+
+		try {
+			scanner = new Scanner(file);
+
+			if (scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				String[] temp = line.split(",");
+				
+				int index = 0;
+				hm = new HashMap<String, Integer>();
+				for (int i = 0; i < temp.length; i++) {
+					temp[i] = temp[i].toLowerCase().trim();
+					
+					if ("".equals(temp[i])) {
+						continue;
+					} else if (this.matrixName == null) {
+						this.matrixName = temp[i];
+					} else {
+						hm.put(temp[i], index++);
+					}
+
+				}
+
+			}
+			int size = hm.size();
+			matrix = new double[size][size];
+			int index = 0;
+			int indey = 0;
+
+			while (scanner.hasNextLine()) {
+				String line = scanner.nextLine();
+				String[] temp = line.split(",");
+				for (int i = 0; i < temp.length; i++) {
+
+					try {
+						Double d = Double.parseDouble(temp[i]);
+						this.matrix[index][indey++] = d;
+					} catch (Exception e) {
+                        e.printStackTrace();
+					}
+
+				}
+
+				index++;
+				indey = 0;
+
+			}
+
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("No Such File!");
+		}  finally {
+			if (scanner != null)
+				scanner.close();
+		}
+		
+
+	
     }
 
     /**
@@ -35,7 +100,7 @@ public class SimilarityMatrix {
      * @return column or row index
      */
     public int getIndex(String attribute) {
-        return indexMap.get(attribute.toLowerCase());
+        return hm.get(attribute.toLowerCase());
     }
 
     /**
