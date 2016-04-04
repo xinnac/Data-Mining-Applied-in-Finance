@@ -52,7 +52,7 @@ public class SimilarityMatrix {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				String[] temp = line.split(",");
-				for (int i = 0; i < temp.length; i++) {
+				for (int i = 1; i < temp.length; i++) {
 
 					try {
 						Double d = Double.parseDouble(temp[i]);
