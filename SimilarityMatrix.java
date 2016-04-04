@@ -8,18 +8,14 @@ import java.util.Scanner;
  * This class reads similarity matrix file and initialize the similarity matrix.
  */
 public class SimilarityMatrix {
-    private String matrixName;
-    private double[][] matrix;
-    private HashMap<String, Integer> hm = new HashMap<>();// Map attribute name to matrix index number
 
-    /**
-     * initialize similarity matrix.
-     * @param fileName
-     */
-    SimilarityMatrix(String fileName) {
+	private String matrixName; // Name of the matrix
+	private double[][] matrix; // Matrix
+	private HashMap<String, Integer> hm; // column name -> column number
 
+	SimilarityMatrix(String filename) {
 		Scanner scanner = null;
-		File file = new File(fileName);
+		File file = new File(filename);
 
 		try {
 			scanner = new Scanner(file);
@@ -27,12 +23,12 @@ public class SimilarityMatrix {
 			if (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				String[] temp = line.split(",");
-				
+
 				int index = 0;
 				hm = new HashMap<String, Integer>();
 				for (int i = 0; i < temp.length; i++) {
 					temp[i] = temp[i].toLowerCase().trim();
-					
+
 					if ("".equals(temp[i])) {
 						continue;
 					} else if (this.matrixName == null) {
@@ -52,13 +48,13 @@ public class SimilarityMatrix {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				String[] temp = line.split(",");
-				for (int i = 1; i < temp.length; i++) {
+				for (int i = 0; i < temp.length; i++) {
 
 					try {
 						Double d = Double.parseDouble(temp[i]);
 						this.matrix[index][indey++] = d;
 					} catch (Exception e) {
-                        e.printStackTrace();
+
 					}
 
 				}
@@ -68,7 +64,7 @@ public class SimilarityMatrix {
 
 			}
 
-			
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -77,39 +73,24 @@ public class SimilarityMatrix {
 			if (scanner != null)
 				scanner.close();
 		}
-		
 
-	
-    }
 
-    /**
-     * get matrix name.
-     * @return matrix name
-     */
-    public String getMatrixName() {
-        return matrixName;
-    }
+	}
 
-    public void setMatrixName(String matrixName) {
-        this.matrixName = matrixName;
-    }
+	public String getName(){
 
-    /**
-     * get column or row index according to the value of attribute.
-     * @param attribute
-     * @return column or row index
-     */
-    public int getIndex(String attribute) {
-        return hm.get(attribute.toLowerCase());
-    }
+		return this.matrixName;
 
-    /**
-     * get similarity according the attribute values of two different instance
-     * @param attribute1
-     * @param attribute2
-     * @return similarity score
-     */
-    public double getSimilarity(String attribute1, String attribute2){
-        return matrix[getIndex(attribute1)][getIndex(attribute2)];
-    }
+	}
+
+
+	public double getSimilarity(int str1, int str2) {
+		// return the similarity to the 2 inputs string
+		return matrix[str1][str2];
+	}
+
+	public int getIndex(String str){
+		//System.out.println(str);
+		return hm.get(str.toLowerCase());
+	}
 }
