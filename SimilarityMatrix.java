@@ -8,108 +8,98 @@ import java.util.Scanner;
  * This class reads similarity matrix file and initialize the similarity matrix.
  */
 public class SimilarityMatrix {
-    private String matrixName;
-    private double[][] matrix;
-    private HashMap<String, Integer> hm = new HashMap<>();// Map attribute name to matrix index number
 
-    /**
-     * initialize similarity matrix.
-     * @param fileName
-     */
-    SimilarityMatrix(String fileName) {
+    private String matrixName; // Name of the matrix
+    private double[][] matrix; // Matrix
+    private HashMap<String, Integer> hm; // column name -> column number
 
-		Scanner scanner = null;
-		File file = new File(fileName);
+    SimilarityMatrix(String filename) {
+        Scanner scanner = null;
+        File file = new File(filename);
 
-		try {
-			scanner = new Scanner(file);
+        try {
+            scanner = new Scanner(file);
 
-			if (scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-				String[] temp = line.split(",");
-				
-				int index = 0;
-				hm = new HashMap<String, Integer>();
-				for (int i = 0; i < temp.length; i++) {
-					temp[i] = temp[i].toLowerCase().trim();
-					
-					if ("".equals(temp[i])) {
-						continue;
-					} else if (this.matrixName == null) {
-						this.matrixName = temp[i];
-					} else {
-						hm.put(temp[i], index++);
-					}
+            if (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] temp = line.split(",");
 
-				}
+                int index = 0;
+                hm = new HashMap<String, Integer>();
+                for (int i = 0; i < temp.length; i++) {
+                    temp[i] = temp[i].toLowerCase().trim();
 
-			}
-			int size = hm.size();
-			matrix = new double[size][size];
-			int index = 0;
-			int indey = 0;
+                    if ("".equals(temp[i])) {
+                        continue;
+                    } else if (this.matrixName == null) {
+                        this.matrixName = temp[i];
+                    } else {
+                        hm.put(temp[i], index++);
+                    }
 
-			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-				String[] temp = line.split(",");
-				for (int i = 0; i < temp.length; i++) {
+                }
 
-					try {
-						Double d = Double.parseDouble(temp[i]);
-						this.matrix[index][indey++] = d;
-					} catch (Exception e) {
-                        e.printStackTrace();
-					}
+            }
+            int size = hm.size();
+            matrix = new double[size][size];
+            int index = 0;
+            int indey = 0;
 
-				}
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] temp = line.split(",");
+                for (int i = 1; i < temp.length; i++) {
 
-				index++;
-				indey = 0;
+                    try {
+                        Double d = Double.parseDouble(temp[i]);
+                        this.matrix[index][indey++] = d;
+                    } catch (Exception e) {
 
-			}
+                    }
 
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("No Such File!");
-		}  finally {
-			if (scanner != null)
-				scanner.close();
-		}
-		
+                }
 
-	
+                index++;
+                indey = 0;
+
+            }
+//            for(int i =0 ; i< matrix.length;i++){
+//                for (int j = 0;j<matrix[0].length;j++){
+//                    System.out.print(matrix[i][j]+" ");
+//                }
+//                System.out.println();
+//            }
+
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            System.out.println("No Such File!");
+        }  finally {
+            if (scanner != null)
+                scanner.close();
+        }
+
+
     }
 
-    /**
-     * get matrix name.
-     * @return matrix name
-     */
-    public String getMatrixName() {
-        return matrixName;
+    public String getName(){
+
+        return this.matrixName;
+
     }
 
-    public void setMatrixName(String matrixName) {
-        this.matrixName = matrixName;
+
+    public double getSimilarity(int str1, int str2) {
+        // return the similarity to the 2 inputs string
+        return matrix[str1][str2];
     }
 
-    /**
-     * get column or row index according to the value of attribute.
-     * @param attribute
-     * @return column or row index
-     */
-    public int getIndex(String attribute) {
-        return hm.get(attribute.toLowerCase());
+    public int getIndex(String str){
+        //System.out.println(str);
+        return hm.get(str.toLowerCase());
     }
 
-    /**
-     * get similarity according the attribute values of two different instance
-     * @param attribute1
-     * @param attribute2
-     * @return similarity score
-     */
-    public double getSimilarity(String attribute1, String attribute2){
-        return matrix[getIndex(attribute1)][getIndex(attribute2)];
+    public double[][] getMatrix(){
+        return this.matrix;
     }
 }
