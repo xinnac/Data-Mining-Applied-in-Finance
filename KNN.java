@@ -19,7 +19,7 @@ public abstract class KNN {
     protected int groupNum = 10;
     protected double bottom = 1.0;
     protected double ceil = 100;
-    protected double number = 10;
+    protected double number = 0;
     protected Random r = new Random();
 
     protected ArrayList<ArrayList<Double>> trainData;
@@ -246,7 +246,6 @@ public abstract class KNN {
                 lastGroup.addAll(trainRawData.subList(end, trainRawData.size()));
             }
         }
-        System.out.println(groups);
     }
     public abstract void executeKNN();
 
@@ -256,11 +255,19 @@ public abstract class KNN {
         for(int i = 0;i< weight.length;i++){
             weight[i] = 1.0;
         }
+        double cur_avac = 0.0;
+        for(int i = 0;i< groupNum;i++){
+            setModelData(i);
+            executeKNN();
+            double ac = computeAccuracy();
+            cur_avac+= ac;
+        }
+        cur_avac = cur_avac / groupNum;
+        System.out.println(cur_avac);
+        double pre_avac = cur_avac;
         boolean b = true;
         int index = 0;
         double[] pre_weight = weight;
-        double cur_avac = 0.0;
-        double pre_avac = cur_avac;
         boolean up = true;
         boolean first = true;
         int num = 0;
@@ -279,7 +286,7 @@ public abstract class KNN {
                     continue;
                 }
                 weight[index] = temp;
-                System.out.print(index + " "+temp+" ");
+                System.out.print(index +" "+ weight[index]+",");
             } else {
                 double temp = decrease(weight[index]);
                 if (temp == weight[index]) {
@@ -287,33 +294,10 @@ public abstract class KNN {
                     continue;
                 }
                 weight[index] = temp;
-                System.out.print(index + " "+temp+" ");
+                System.out.print(index +" "+ weight[index]+",");
             }
             for(int i = 0;i< groupNum;i++){
-                ArrayList<ArrayList<String>> train = new ArrayList<ArrayList<String>>();
-                if(i < groupNum-1){
-                    setTestData(groups.get(i));
-                    for(int j = 0;j<groupNum-1;j++){
-                        if(i == j) continue;
-                        ArrayList<ArrayList<String>> temp = groups.get(j);
-                        for(int t = 0;t <temp.size();t++){
-                            train.add(temp.get(t));
-                        }
-                    }
-                    for(int t = 0;t <lastGroup.size();t++){
-                        train.add(lastGroup.get(t));
-                    }
-                } else {
-                    setTestData(lastGroup);
-                    for(int j = 0;j<groupNum-1;j++){
-                        if(i == j) continue;
-                        ArrayList<ArrayList<String>> temp = groups.get(j);
-                        for(int t = 0;t <temp.size();t++){
-                            train.add(temp.get(t));
-                        }
-                    }
-                }
-                setTestData(train);
+                setModelData(i);
                 executeKNN();
                 double ac = computeAccuracy();
                 cur_avac+= ac;
@@ -327,6 +311,7 @@ public abstract class KNN {
                 continue;
             }
             else if(cur_avac <= pre_avac && up && first) {
+                weight[index] = pre_weight[index];
                 up = false;
                 first = false;
                 continue;
@@ -346,9 +331,28 @@ public abstract class KNN {
                 first = true;
                 System.out.println();
             }
-
         }
+        System.out.println();
+        System.out.println(cur_avac);
+    }
 
+    public void setModelData(int i) {
+        ArrayList<ArrayList<String>> train = new ArrayList<ArrayList<String>>();
+        if(i < groupNum - 1){
+            setTestData(groups.get(i));
+            for(int j = 0;j < groupNum - 1;j++){
+                if(i == j) continue;
+                train.addAll(groups.get(j));
+            }
+            train.addAll(lastGroup);
+        } else {
+            setTestData(lastGroup);
+            for(int j = 0;j<groupNum - 1;j++){
+                if(i == j) continue;
+                train.addAll(groups.get(j));
+            }
+        }
+        setTrainData(train);
     }
 
     public double increase(double d){
