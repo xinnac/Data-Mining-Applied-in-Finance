@@ -1,60 +1,52 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
- * Created by xinnacai on 4/3/16.
+ * Created by Paranjay on 4/3/16.
  */
 public class ProcessData {
-    private ArrayList<String> attributes;
-    private ArrayList<ArrayList<String>> ret;
-    ProcessData (String filename) {
+    private ArrayList<ArrayList<String>> dataList;
+    private ArrayList<String> attributeList;
+
+    ProcessData(String filename) {
         Scanner scanner = null;
-        attributes = new ArrayList<String>();
-        ret = new ArrayList<ArrayList<String>>();
+        attributeList = new ArrayList<String>();
+        dataList = new ArrayList<ArrayList<String>>();
         File file = new File(filename);
 
         try {
             scanner = new Scanner(file);
-
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                if (line.startsWith("@attribute")) {
-                    String[] temp = line.split(" ");
-                    attributes.add(temp[1].toLowerCase().trim());
-                }else if(line.startsWith("@data")){
+                String newLine = scanner.nextLine();
+                if (newLine.startsWith("@data")) {
                     break;
                 }
-
+                if (newLine.startsWith("@attribute")) {
+                    String[] var = newLine.split(" ");
+                    attributeList.add(var[1].trim().toLowerCase());
+                }
             }
-            // handle @data
+
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] temp = line.split(",");
-                ArrayList<String>arr = new ArrayList<String>();
-                for(int i=0;i<temp.length;i++)
-                    arr.add(temp[i]);
-                ret.add(arr);
-
+                String[] var = line.split(",");
+                ArrayList<String> list = new ArrayList<String>();
+                for (int i = 0; i < var.length; i++)
+                    list.add(var[i]);
+                dataList.add(list);
             }
-
-
-
-        } catch (Exception e) {
-            System.out.println("Can not find the file");
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File Not Found.");
         }
     }
 
-    // return the data extracting from the file
-    public ArrayList<ArrayList<String>> getData(){
-        return ret;
+    public ArrayList<String> getAttributes() {
+        return attributeList;
     }
 
-    public ArrayList<String> getAttributes(){
-        return attributes;
+    public ArrayList<ArrayList<String>> getData() {
+        return dataList;
     }
-
-
 }
