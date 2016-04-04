@@ -8,7 +8,7 @@ public class Test {
 //            if(i == 0) weight[i] = 100;
 //            else weight[i] = 1;
 //        }
-        KNNLabel knn = new KNNLabel(3,0.7,1,100,10);
+        KNNLabel knn = new KNNLabel(3,0.9,1,100,10);
         ProcessData train = new ProcessData("trainProdSelection.arff");
 //        System.out.println(train.getData());
         ProcessData test = new ProcessData("testProdSelection.arff");
@@ -19,6 +19,7 @@ public class Test {
         knn.addMatrix(lifeStyle.getName(),lifeStyle);
         knn.setAttribute(train.getAttributes());
         knn.setTrainData(train.getData());
+//        System.out.println(train.getData().size()+" "+train.getData());
         knn.trainModel();
         knn.setTrainData(train.getData());
         knn.setTestData(test.getData());
