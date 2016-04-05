@@ -1,19 +1,19 @@
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
  * Created by Paranjay on 4/3/16.
  */
 public class ProcessData {
-    private ArrayList<ArrayList<String>> dataList;
-    private ArrayList<String> attributeList;
+    private LinkedList<LinkedList<String>> dataList;
+    private LinkedList<String> attributeList;
 
     ProcessData(String filename) {
         Scanner scanner = null;
-        attributeList = new ArrayList<String>();
-        dataList = new ArrayList<ArrayList<String>>();
+        attributeList = new LinkedList<String>();
+        dataList = new LinkedList<LinkedList<String>>();
         File file = new File(filename);
 
         try {
@@ -32,7 +32,7 @@ public class ProcessData {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] var = line.split(",");
-                ArrayList<String> list = new ArrayList<String>();
+                LinkedList<String> list = new LinkedList<String>();
                 for (int i = 0; i < var.length; i++)
                     list.add(var[i]);
                 dataList.add(list);
@@ -42,11 +42,11 @@ public class ProcessData {
         }
     }
 
-    public ArrayList<String> getAttributes() {
+    public LinkedList<String> getAttributes() {
         return attributeList;
     }
 
-    public ArrayList<ArrayList<String>> getData() {
+    public LinkedList<LinkedList<String>> getData() {
         return dataList;
     }
 }
