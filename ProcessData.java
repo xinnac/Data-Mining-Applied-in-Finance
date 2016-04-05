@@ -10,11 +10,11 @@ public class ProcessData {
     private LinkedList<LinkedList<String>> dataList;
     private LinkedList<String> attributeList;
 
-    ProcessData(String filename) {
+    ProcessData(String textFile) {
         Scanner scanner = null;
         attributeList = new LinkedList<String>();
         dataList = new LinkedList<LinkedList<String>>();
-        File file = new File(filename);
+        File file = new File(textFile);
 
         try {
             scanner = new Scanner(file);
