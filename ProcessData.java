@@ -30,8 +30,8 @@ public class ProcessData {
             }
 
             while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                String[] var = line.split(",");
+                String newLine = scanner.nextLine();
+                String[] var = newLine.split(",");
                 LinkedList<String> list = new LinkedList<String>();
                 for (int i = 0; i < var.length; i++)
                     list.add(var[i]);
