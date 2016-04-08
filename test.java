@@ -19,21 +19,12 @@ public class Test {
         knn.addMatrix(lifeStyle.getName(),lifeStyle);
         knn.setAttribute(train.getAttributes());
         knn.setTrainData(train.getData());
-//        System.out.println(train.getData().size()+" "+train.getData());
         knn.trainModel();
         knn.setTrainData(train.getData());
         knn.setTestData(test.getData());
-//        System.out.println(train.getAttributes());
-
-        knn.executeKNN();
         for(int i = 0; i<knn.weight.length;i++){
             System.out.print(knn.weight[i]+",");
         }
-        System.out.println();
-        System.out.println(knn.computeAccuracy());
-        System.out.println(knn.getPredictLable().size());
-        for(int i = 0; i< knn.getPredictLable().size();i++){
-            System.out.println(i+1+" "+knn.getPredictLable().get(i)+" "+knn.getOringinalLabel().get(i));
-        }
+
     }
 }

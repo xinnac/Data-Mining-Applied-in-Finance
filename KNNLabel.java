@@ -88,12 +88,13 @@ public class KNNLabel extends KNN {
                 if (o1.getValue() < o2.getValue()) return 1;
                 else if (o1.getValue() > o2.getValue()) return -1;
                 else {
-                    if (o1.getKey() <= o2.getKey()) return 1;
+                    if (o1.getKey() <= o2.getKey()) return -1;
                     else return -1;
 //                return -(o1.getValue().compareTo(o2.getValue()));
                 }
             }
         });
+//        System.out.println(labelList);
         return labelList.getFirst().getKey();
     }
 
@@ -113,6 +114,12 @@ public class KNNLabel extends KNN {
         setTrainLabel();
         setOringinalLabel();
         getResult();
+        System.out.println();
+        System.out.println(computeAccuracy());
+        System.out.println(predictLable.size());
+        for(int i = 0; i< predictLable.size();i++){
+            System.out.println(i+1+" "+predictLable.get(i)+" "+oringinalLabel.get(i));
+        }
 //        System.out.println(predictLable.size());
 //        for(int i = 0; i< predictLable.size();i++){
 //            System.out.println(i+1+" "+predictLable.get(i)+" "+oringinalLabel.get(i));
