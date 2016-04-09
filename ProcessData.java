@@ -1,52 +1,60 @@
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
  * Created by Paranjay on 4/3/16.
  */
 public class ProcessData {
-    private LinkedList<LinkedList<String>> dataList;
-    private LinkedList<String> attributeList;
+    private ArrayList<String> attributes;
+    private ArrayList<ArrayList<String>> ret;
 
-    ProcessData(String textFile) {
+    ProcessData(String filename) {
         Scanner scanner = null;
-        attributeList = new LinkedList<String>();
-        dataList = new LinkedList<LinkedList<String>>();
-        File file = new File(textFile);
+        attributes = new ArrayList<String>();
+        ret = new ArrayList<ArrayList<String>>();
+        File file = new File(filename);
 
         try {
             scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                String newLine = scanner.nextLine();
-                if (newLine.startsWith("@data")) {
-                    break;
-                }
-                if (newLine.startsWith("@attribute")) {
-                    String[] var = newLine.split(" ");
-                    attributeList.add(var[1].trim().toLowerCase());
-                }
-            }
 
             while (scanner.hasNextLine()) {
-                String newLine = scanner.nextLine();
-                String[] var = newLine.split(",");
-                LinkedList<String> list = new LinkedList<String>();
-                for (int i = 0; i < var.length; i++)
-                    list.add(var[i]);
-                dataList.add(list);
+                String line = scanner.nextLine();
+                if (line.startsWith("@attribute")) {
+                    String[] temp = line.split(" ");
+                    attributes.add(temp[1].toLowerCase().trim());
+                }else if(line.startsWith("@data")){
+                    break;
+                }
+
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("Error: File Not Found.");
+            // handle @data
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] temp = line.split(",");
+                ArrayList<String>arr = new ArrayList<String>();
+                for(int i=0;i<temp.length;i++)
+                    arr.add(temp[i]);
+                ret.add(arr);
+
+            }
+
+
+
+        } catch (Exception e) {
+            System.out.println("Can not find the file");
         }
     }
 
-    public LinkedList<String> getAttributes() {
-        return attributeList;
+    // return the data extracting from the file
+    public ArrayList<ArrayList<String>> getData(){
+        return ret;
     }
 
-    public LinkedList<LinkedList<String>> getData() {
-        return dataList;
+    public ArrayList<String> getAttributes(){
+        return attributes;
     }
+
+
+
 }

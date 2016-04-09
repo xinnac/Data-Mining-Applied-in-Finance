@@ -8,8 +8,11 @@ public class KNNLabel extends KNN {
     private ArrayList<Integer> oringinalLabel;
     private ArrayList<Integer> predictLable;
 
-    public KNNLabel(int k,double accuracy,double bottom, double ceil, int number){
-        super(k,accuracy,bottom,ceil,number);
+    public KNNLabel(int k,double accuracy){
+        super(k,accuracy);
+    }
+    public KNNLabel(int k){
+        super(k);
     }
 
     public double getAccuracy(){
@@ -55,7 +58,11 @@ public class KNNLabel extends KNN {
         else if(c.equalsIgnoreCase("C3")) cc = Constants.C3;
         else if(c.equalsIgnoreCase("C4")) cc = Constants.C4;
         else if(c.equalsIgnoreCase("C5")) cc = Constants.C5;
-        else {throw new IllegalArgumentException("invalid class");}
+        else if(c.equalsIgnoreCase("1")) cc = 1;
+        else if(c.equalsIgnoreCase("0")) cc = 0;
+        else {
+            throw new IllegalArgumentException("illegal label typ");
+        }
         return cc;
     }
 
@@ -114,17 +121,25 @@ public class KNNLabel extends KNN {
         setTrainLabel();
         setOringinalLabel();
         getResult();
-        System.out.println();
-        System.out.println(computeAccuracy());
-        System.out.println(predictLable.size());
-        for(int i = 0; i< predictLable.size();i++){
-            System.out.println(i+1+" "+predictLable.get(i)+" "+oringinalLabel.get(i));
-        }
+//        System.out.println();
+//        System.out.println(computeAccuracy());
+//        System.out.println(predictLable.size());
+//        for(int i = 0; i< predictLable.size();i++){
+//            System.out.println(i+1+" "+predictLable.get(i)+" "+oringinalLabel.get(i));
+//        }
 //        System.out.println(predictLable.size());
 //        for(int i = 0; i< predictLable.size();i++){
 //            System.out.println(i+1+" "+predictLable.get(i)+" "+oringinalLabel.get(i));
 //        }
     }
+
+    public void printResult() {
+        System.out.println(predictLable.size());
+        for(int i = 0; i< predictLable.size();i++){
+            System.out.println(predictLable.get(i));
+        }
+    }
+
 
     public double computeAccuracy() {
         double ac = 0.0;

@@ -3,12 +3,7 @@
  */
 public class Test {
     public static void main(String[] args) {
-//        double[] weight = new double[6];
-//        for(int i=0;i < weight.length;i++) {
-//            if(i == 0) weight[i] = 100;
-//            else weight[i] = 1;
-//        }
-        KNNLabel knn = new KNNLabel(3,0.9,1,100,10);
+        KNNLabel knn = new KNNLabel(3);
         ProcessData train = new ProcessData("trainProdSelection.arff");
 //        System.out.println(train.getData());
         ProcessData test = new ProcessData("testProdSelection.arff");
@@ -19,12 +14,19 @@ public class Test {
         knn.addMatrix(lifeStyle.getName(),lifeStyle);
         knn.setAttribute(train.getAttributes());
         knn.setTrainData(train.getData());
-        knn.trainModel();
-        knn.setTrainData(train.getData());
+//        knn.trainModel();
+//        knn.setTrainData(train.getData());
         knn.setTestData(test.getData());
-        for(int i = 0; i<knn.weight.length;i++){
-            System.out.print(knn.weight[i]+",");
-        }
+        double[] weight = {7.880,0.034,0.210,8.0827,3.316,3.978};
+        knn.setWeight(weight);
+        knn.executeKNN();
+        knn.printResult();
+//        knn.baseLine();
+//        System.out.println(knn.computeAccuracy());
+//        for(int i = 0; i<knn.weight.length;i++){
+//            System.out.format("%.3f",knn.weight[i]);
+//            System.out.print(",");
+//        }
 
     }
 }

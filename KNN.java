@@ -19,7 +19,7 @@ public abstract class KNN {
     protected int groupNum = 10;
     protected double bottom = 1.0;
     protected double ceil = 100;
-    protected double number = 0;
+    protected double number = 10;
     protected Random r = new Random();
 
     protected ArrayList<ArrayList<Double>> trainData;
@@ -27,12 +27,14 @@ public abstract class KNN {
     protected HashMap<Integer,ArrayList<ArrayList<String>>> groups;
     protected ArrayList<ArrayList<String>> lastGroup = new ArrayList<ArrayList<String>>();
 
-    public KNN(int k,double accuracy,double bottom, double ceil, int number){
+    public KNN(int k,double accuracy){
         this.k = k;
         this.accuracy = accuracy;
-        this.bottom = bottom;
-        this.ceil = ceil;
-        this.number = number;
+    }
+
+    public KNN(int k){
+        this.k = k;
+        this.accuracy = Double.MAX_VALUE;
     }
 
     public void setK(int k) {
@@ -76,10 +78,10 @@ public abstract class KNN {
             }
             minValue[i] = min;
         }
-        for(int i = 0; i< minValue.length;i++){
-            System.out.print(minValue[i]+",");
-        }
-        System.out.println();
+//        for(int i = 0; i< minValue.length;i++){
+//            System.out.print(minValue[i]+",");
+//        }
+//        System.out.println();
     }
 
     public double[] getMinValue(){
@@ -104,10 +106,10 @@ public abstract class KNN {
             }
             maxValue[i] = max;
         }
-        for(int i = 0; i< maxValue.length;i++){
-            System.out.print(maxValue[i]+",");
-        }
-        System.out.println();
+//        for(int i = 0; i< maxValue.length;i++){
+//            System.out.print(maxValue[i]+",");
+//        }
+//        System.out.println();
     }
 
     public double[] getMaxValue() {
@@ -239,10 +241,12 @@ public abstract class KNN {
     public void partitionGroup(){
         groups = new HashMap<>();
         int gap = trainRawData.size() / groupNum;
+        int remain = trainRawData.size() % groupNum;
         for(int i = 0;i <groupNum;i++ ){
             ArrayList<ArrayList<String>> sublist = new ArrayList<ArrayList<String>>();
-            for(int j =0;j<gap;j++){
-                sublist.add(trainRawData.get(i+j*groupNum));
+            for(int j =0;j<gap;j++) {
+                sublist.add(trainRawData.get(i + j * groupNum));
+                if(i < remain) sublist.add(trainRawData.get(gap*groupNum+i));
             }
             groups.put(i,sublist);
         }
@@ -251,10 +255,10 @@ public abstract class KNN {
 
     public void baseLine () {
         partitionGroup();
-        weight = new double[attribute.size()-1];
-        for(int i = 0;i< weight.length;i++){
-            weight[i] = 1.0;
-        }
+//        weight = new double[attribute.size()-1];
+//        for(int i = 0;i< weight.length;i++){
+//            weight[i] = 1.0;
+//        }
         double cur_avac = 0.0;
         for(int i = 0;i< groupNum;i++){
             setModelData(i);
@@ -263,14 +267,16 @@ public abstract class KNN {
             cur_avac+= ac;
         }
         cur_avac = cur_avac/groupNum;
-        System.out.println(cur_avac);
+        System.out.println("validation accuracy: "+cur_avac);
     }
 
     public void trainModel (){
         partitionGroup();
         weight = new double[attribute.size()-1];
+        double[] pre_weight = new double[attribute.size()-1];
         for(int i = 0;i< weight.length;i++){
             weight[i] = 1.0;
+            pre_weight[i] = 1.0;
         }
         double cur_avac = 0.0;
         for(int i = 0;i< groupNum;i++){
@@ -280,20 +286,21 @@ public abstract class KNN {
             cur_avac+= ac;
         }
         cur_avac = cur_avac / groupNum;
+        System.out.println(cur_avac);
         double pre_avac = cur_avac;
         boolean b = true;
         int index = 0;
-        double[] pre_weight = weight;
         boolean up = true;
         boolean first = true;
         int num = 0;
+        System.out.print(index+":");
         while(b) {
             if(index == weight.length) {
                 num++;
                 index = 0;
             }
             pre_weight[index] = weight[index];
-            pre_avac = cur_avac;
+//            pre_avac = cur_avac;
             cur_avac = 0.0;
             if(up) {
                 double temp = increase(weight[index]);
@@ -302,6 +309,7 @@ public abstract class KNN {
                     continue;
                 }
                 weight[index] = temp;
+                System.out.print(weight[index]+",");
             } else {
                 double temp = decrease(weight[index]);
                 if (temp == weight[index]) {
@@ -309,6 +317,7 @@ public abstract class KNN {
                     continue;
                 }
                 weight[index] = temp;
+                System.out.print(weight[index]+",");
             }
             for(int i = 0;i< groupNum;i++){
                 setModelData(i);
@@ -317,33 +326,40 @@ public abstract class KNN {
                 cur_avac+= ac;
             }
             cur_avac = cur_avac / groupNum;
-            if(cur_avac >= accuracy || (num == number && index == weight.length-1) ){
-               break;
+//            System.out.println(cur_avac);
+            if(cur_avac >= accuracy || (Math.abs(cur_avac - pre_avac) < 1E-15 && num >= number) ){
+                break;
             }
             if(cur_avac > pre_avac && up && first) {
+                pre_avac = cur_avac;
                 first = false;
-                continue;
-            }
-            else if(cur_avac <= pre_avac && up && first) {
+            } else if(cur_avac <= pre_avac && up && first) {
                 weight[index] = pre_weight[index];
                 up = false;
                 first = false;
-                continue;
-            } else if(cur_avac > pre_avac && up && !first) continue;
+            } else if(cur_avac > pre_avac && up && !first) {
+                pre_avac = cur_avac;
+            }
             else if(cur_avac <= pre_avac && up && !first) {
                 weight[index] = pre_weight[index];
                 index ++;
+                System.out.println(pre_avac);
+                System.out.println();
+                System.out.print(index % (attribute.size()-1)+":");
                 up = true;
                 first =  true;
-                System.out.println();
             }
-            else if(cur_avac > pre_avac && !up) continue;
+            else if(cur_avac > pre_avac && !up) {
+                pre_avac = cur_avac;
+            }
             else {
                 weight[index] = pre_weight[index];
                 index++;
+                System.out.println(pre_avac);
+                System.out.println();
+                System.out.print(index % (attribute.size()-1)+":");
                 up = true;
                 first = true;
-                System.out.println();
             }
         }
         System.out.println();
@@ -361,14 +377,16 @@ public abstract class KNN {
     }
 
     public double increase(double d){
-        if(d >= ceil -0.1) return ceil -0.1;
-        return d+0.1+ (ceil - d - 0.1) * r.nextDouble();
+        double dd = r.nextDouble()*(10.0-(d+0.01)) +(d+0.01);
+        return dd;
     }
 
     public double decrease(double d){
-        if(d == bottom ) return bottom +0.1;
-        return bottom+ (d - bottom) * r.nextDouble();
+        double dd = r.nextDouble()*(d-(0.0+0.01)) +(0.01);
+        return dd;
     }
+//    double mid = (double)(d-0.0)/2 +0.0;
+//    return mid;
 
 }
 
