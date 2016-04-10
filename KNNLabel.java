@@ -5,8 +5,8 @@ import java.util.*;
  */
 public class KNNLabel extends KNN {
     private HashMap<Integer,Integer> trainLabel;// map index of train data to its class label
-    private ArrayList<Integer> oringinalLabel;
-    private ArrayList<Integer> predictLable;
+    private ArrayList<Integer> oringinalLabel; // store the oringinal label of test data
+    private ArrayList<Integer> predictLable;// store the predicted label of test data
 
     public KNNLabel(int k,double accuracy){
         super(k,accuracy);
@@ -31,6 +31,9 @@ public class KNNLabel extends KNN {
         return predictLable;
     }
 
+    /**
+     * set the original label of test data
+     */
     public void setOringinalLabel() {
         oringinalLabel = new ArrayList<Integer>();
         for(int i =0;i  < testRawData.size();i++) {
@@ -41,6 +44,9 @@ public class KNNLabel extends KNN {
         }
     }
 
+    /**
+     * set the label of train data
+     */
     public void setTrainLabel() {
         trainLabel = new HashMap<Integer,Integer>();
         for(int i =0;i < trainRawData.size();i++){
@@ -51,6 +57,11 @@ public class KNNLabel extends KNN {
         }
     }
 
+    /**
+     * get the class label
+     * @param c the String stored in class attribute
+     * @return the integer label of the class
+     */
     public int getCC (String c){
         int cc = 0;
         if(c.equalsIgnoreCase("C1")) cc = Constants.C1;
@@ -68,14 +79,11 @@ public class KNNLabel extends KNN {
 
 
     /**
-     * predict class label.
-     * @return
+     * predict class label for one test instance.
+     * @return the integer class label
      */
     public int predictResult(ArrayList<Double> test) {
-        HashMap<Integer,Double> labelScore = new HashMap<Integer,Double>();// map label to its score
-//        TreeMap tm = distanceResult(test);
-
-//        LinkedList<Map.Entry<Integer,Double>> list = new LinkedList<Map.Entry<Integer,Double>>(tm.entrySet());
+        HashMap<Integer,Double> labelScore = new HashMap<Integer,Double>();// map label to its vote
         LinkedList<Map.Entry<Integer,Double>> list = distanceResult(test);
         for(int i = 0;i<k;i++){
             int c = trainLabel.get(list.get(i).getKey());
@@ -97,14 +105,15 @@ public class KNNLabel extends KNN {
                 else {
                     if (o1.getKey() <= o2.getKey()) return -1;
                     else return -1;
-//                return -(o1.getValue().compareTo(o2.getValue()));
                 }
             }
         });
-//        System.out.println(labelList);
         return labelList.getFirst().getKey();
     }
 
+    /**
+     * predict the result for all test instance and save the predicted result in the label list.
+     */
     public void getResult() {
         predictLable = new ArrayList<Integer>();
         for(int i = 0; i < testData.size();i++){
@@ -113,6 +122,9 @@ public class KNNLabel extends KNN {
         }
     }
 
+    /**
+     * execute knn process
+     */
     public void executeKNN() {
         setMinValue();
         setMaxValue();
@@ -121,25 +133,17 @@ public class KNNLabel extends KNN {
         setTrainLabel();
         setOringinalLabel();
         getResult();
-//        System.out.println();
-//        System.out.println(computeAccuracy());
-//        System.out.println(predictLable.size());
-//        for(int i = 0; i< predictLable.size();i++){
-//            System.out.println(i+1+" "+predictLable.get(i)+" "+oringinalLabel.get(i));
-//        }
-//        System.out.println(predictLable.size());
-//        for(int i = 0; i< predictLable.size();i++){
-//            System.out.println(i+1+" "+predictLable.get(i)+" "+oringinalLabel.get(i));
-//        }
     }
 
+    /**
+     * print the predicted label for test instances
+     */
     public void printResult() {
         System.out.println(predictLable.size());
         for(int i = 0; i< predictLable.size();i++){
             System.out.println(predictLable.get(i));
         }
     }
-
 
     public double computeAccuracy() {
         double ac = 0.0;

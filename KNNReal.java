@@ -5,9 +5,9 @@ import java.util.*;
  * Created by xinnacai on 4/8/16.
  */
 public class KNNReal extends KNN {
-    private HashMap<Integer,Double> trainNumber;// map index of train data to its class label
-    private ArrayList<Double> oringinalNumber;
-    private ArrayList<Double> predictNumber;
+    private HashMap<Integer,Double> trainNumber;// map index of train data to its real number in class
+    private ArrayList<Double> oringinalNumber;// save the original real number in the test data
+    private ArrayList<Double> predictNumber;// save the predicted real number in the test data
 
     public KNNReal(int k,double accuracy){
         super(k,accuracy);
@@ -27,6 +27,9 @@ public class KNNReal extends KNN {
         return predictNumber;
     }
 
+    /**
+     * set the original real number of test data
+     */
     public void setOringinalNumber() {
         oringinalNumber = new ArrayList<Double>();
         for(int i =0;i  < testRawData.size();i++) {
@@ -36,6 +39,9 @@ public class KNNReal extends KNN {
         }
     }
 
+    /**
+     * set the real number of train data
+     */
     public void setTrainNumber() {
         trainNumber = new HashMap<Integer,Double>();
         for(int i =0;i < trainRawData.size();i++){
@@ -46,8 +52,8 @@ public class KNNReal extends KNN {
     }
 
     /**
-     * predict class label.
-     * @return score for one record of test data.
+     * predict real number for one test instance
+     * @return real nymber for one record of test data.
      */
     public double predictResult(ArrayList<Double> test) {
 //        LinkedList<Map.Entry<Integer,Double>> list = new LinkedList<Map.Entry<Integer,Double>>(tm.entrySet());
@@ -61,6 +67,9 @@ public class KNNReal extends KNN {
         return score;
     }
 
+    /**
+     * predict real number all test cases.
+     */
     public void getResult() {
         predictNumber = new ArrayList<Double>();
         for(int i = 0; i < testData.size();i++){
@@ -69,26 +78,22 @@ public class KNNReal extends KNN {
         }
     }
 
+    /**
+     * execute the knn in training process
+     */
     public void executeKNN() {
         setMinValue();
         setMaxValue();
         normalize();
         setWeightSum(weight);
         setTrainNumber();
-        setOringinalNumber();
+        setOringinalNumber(); // here test has original real number in class
         getResult();
-//        System.out.println();
-//        System.out.println(computeAccuracy());
-//        System.out.println(predictLable.size());
-//        for(int i = 0; i< predictLable.size();i++){
-//            System.out.println(i+1+" "+predictLable.get(i)+" "+oringinalLabel.get(i));
-//        }
-//        System.out.println(predictLable.size());
-//        for(int i = 0; i< predictLable.size();i++){
-//            System.out.println(i+1+" "+predictLable.get(i)+" "+oringinalLabel.get(i));
-//        }
     }
 
+    /**
+     * execute the knn in final predicting real nymber process
+     */
     public void executeKNNReal() {
         setMinValue();
         setMaxValue();
@@ -98,6 +103,9 @@ public class KNNReal extends KNN {
         getResult();
     }
 
+    /**
+     * print the predicted real number for test cases.
+     */
     public void printResult() {
         DecimalFormat formatter = new DecimalFormat("#0.00");
         System.out.println(predictNumber.size());

@@ -13,14 +13,15 @@ public class Test {
         knn.addMatrix(type.getName(),type);
         knn.addMatrix(lifeStyle.getName(),lifeStyle);
         knn.setAttribute(train.getAttributes());
-        knn.setTrainData(train.getData());
+        knn.setTrainData(train.getRet());
 //        knn.trainModel();
 //        knn.setTrainData(train.getData());
-        knn.setTestData(test.getData());
-        double[] weight = {7.880,0.034,0.210,8.0827,3.316,3.978};
+        knn.setTestData(test.getRet());
+        double[] weight = {1,1,1,1,1,1};
         knn.setWeight(weight);
-        knn.executeKNN();
-        knn.printResult();
+        knn.baseLine();
+//        knn.executeKNN();
+//        knn.printResult();
 //        knn.baseLine();
 //        System.out.println(knn.computeAccuracy());
 //        for(int i = 0; i<knn.weight.length;i++){

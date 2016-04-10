@@ -16,12 +16,12 @@ public class TestB2 {
         knn.addMatrix(customer.getName(),customer);
         knn.addMatrix(size.getName(),size);
         knn.setAttribute(train.getAttributes());
-        knn.setTrainData(train.getData());
+        knn.setTrainData(train.getRet());
 //        knn.trainModel();
         double[] weight = {7.883,1.000,3.721,1.000,0.271,0.767,1.000,8.093};
         knn.setWeight(weight);
         knn.baseLine();
-        knn.setTestData(test.getData());
+        knn.setTestData(test.getRet());
         knn.executeKNNReal();
         knn.printResult();
 
