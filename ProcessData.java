@@ -15,29 +15,28 @@ public class ProcessData {
      */
     ProcessData(String filename) {
         File file = new File(filename);
-
         try {
             Scanner scanner = new Scanner(file);
-            if(scanner.hasNextLine()){
-                scanner.nextLine();
-            }
+
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (line.startsWith("@attribute")) {
-                    String[] array = line.split(" ");
-                    attributes.add(array[1].toLowerCase().trim());
-                    continue;
-                } else if (line.startsWith("@data")) {
-                    continue;
-                } else if (line.equals("")) {
-                    continue;
+                    String[] temp = line.split(" ");
+                    attributes.add(temp[1].toLowerCase().trim());
+                }else if(line.startsWith("@data")){
+                    break;
                 }
-                String[] value = line.split(",");
-                ArrayList<String> list = new ArrayList<String>();
-                for (int i = 0; i < value.length; i++) {
-                    list.add(value[i].toLowerCase().trim());
-                }
-                ret.add(list);
+
+            }
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                String[] temp = line.split(",");
+                ArrayList<String>arr = new ArrayList<String>();
+                for(int i=0;i<temp.length;i++)
+                    arr.add(temp[i]);
+                ret.add(arr);
+
             }
             scanner.close();
 

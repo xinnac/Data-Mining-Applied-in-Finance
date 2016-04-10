@@ -1,6 +1,0 @@
-Type,student,engineer,librarian,professor,Doctor
-student,1,0,0,0,0
-engineer,0,1,0,0,0
-librarian,0,0,1,0,0
-professor,0,0,0,1,0
-Doctor,0,0,0,0,1

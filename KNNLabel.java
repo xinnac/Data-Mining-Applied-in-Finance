@@ -85,7 +85,7 @@ public class KNNLabel extends KNN {
     public int predictResult(ArrayList<Double> test) {
         HashMap<Integer,Double> labelScore = new HashMap<Integer,Double>();// map label to its vote
         LinkedList<Map.Entry<Integer,Double>> list = distanceResult(test);
-        for(int i = 0;i<k;i++){
+        for(int i = 0;i < k;i++){
             int c = trainLabel.get(list.get(i).getKey());
             double d = (double)1.0 / (list.get(i).getValue());
             if(!(labelScore.containsKey(c))) {

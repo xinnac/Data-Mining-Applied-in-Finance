@@ -29,7 +29,7 @@ public class SimilarityMatrix {
 						this.name = array[i].toLowerCase().trim();
 						continue;
 					}
-					hm.put(array[i],index++);
+					hm.put(array[i].toLowerCase().trim(),index++);
 				}
 			}
 			matrix = new double[hm.size()][hm.size()];

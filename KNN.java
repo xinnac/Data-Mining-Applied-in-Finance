@@ -1,5 +1,6 @@
 import sun.net.www.content.text.Generic;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 /**
@@ -170,7 +171,6 @@ public abstract class KNN {
                     temp.add(d);
                 }
                 testData.add(temp);
-//                System.out.println(temp);
             }
         } catch (Exception e) {
             System.out.println(e.toString());
@@ -248,8 +248,8 @@ public abstract class KNN {
             ArrayList<ArrayList<String>> sublist = new ArrayList<ArrayList<String>>();
             for (int j = 0; j < gap; j++) {
                 sublist.add(trainRawData.get(i + j * groupNum));
-                if (i < remain) sublist.add(trainRawData.get(gap * groupNum + i));
             }
+            if (i < remain) sublist.add(trainRawData.get(gap * groupNum + i));
             groups.put(i, sublist);
         }
     }
@@ -257,7 +257,7 @@ public abstract class KNN {
     public abstract void executeKNN();
 
     /**
-     * execute without training the weight and shows accuracy.
+     * execute cross validation without training the weight and shows accuracy.
      */
     public void baseLine() {
         partitionGroup();
@@ -273,7 +273,7 @@ public abstract class KNN {
             cur_avac += ac;
         }
         cur_avac = cur_avac / groupNum;
-        System.out.println("validation accuracy: " + cur_avac);
+        System.out.println("baseline accuracy: " + cur_avac);
     }
 
     /**
@@ -289,7 +289,7 @@ public abstract class KNN {
             cur_avac += ac;
         }
         cur_avac = cur_avac / groupNum;
-        System.out.println("validation accuracy: " + cur_avac);
+        System.out.println("The model we select the accuracy: " + cur_avac);
     }
 
     /**
@@ -349,7 +349,7 @@ public abstract class KNN {
                 cur_avac += ac;
             }
             cur_avac = cur_avac / groupNum;// after decrease or increase the weight, calculate the accuracy
-            if (cur_avac >= accuracy || (Math.abs(cur_avac - pre_avac) < 1E-15 && num >= number)) {
+            if (cur_avac >= accuracy || (Math.abs(cur_avac - pre_avac) < 1E-15 && num >= number && cur_avac >= 0.9)) {
                 break;
             }// if the accuracy is larger than predefined accuracy, or the accuracy becomes stable and the round time is over 10 times.
             // break the loop and output the trained weight
@@ -365,8 +365,7 @@ public abstract class KNN {
             } else if (cur_avac <= pre_avac && up && !first) {// if the accuracy declines, and it is not first try and the weight has been increased
                 weight[index] = pre_weight[index];// recover the previous weight
                 index++;// move to next index
-                System.out.println(pre_avac);
-                System.out.println();
+                System.out.println(pre_avac+"\n");
                 System.out.print(index % (attribute.size() - 1) + ":");
                 up = true;
                 first = true;
@@ -375,15 +374,21 @@ public abstract class KNN {
             } else {// if the accuracy declines and the weight has been decreased
                 weight[index] = pre_weight[index];// recover the previous weight
                 index++;// move to next index
-                System.out.println(pre_avac);
-                System.out.println();
+                System.out.println(pre_avac+"\n");
                 System.out.print(index % (attribute.size() - 1) + ":");
                 up = true;
                 first = true;
             }
         }
         System.out.println();
-        System.out.println(cur_avac); //finish the training, output the current accuracy.
+        System.out.println("After training the accuracy: "+cur_avac); //finish the training, output the current accuracy.
+        System.out.println();
+        DecimalFormat df = new DecimalFormat("0.00");
+        System.out.print("After training the weigh vecotr: ");
+        for(int i = 0;i< weight.length;i++){
+            System.out.print(df.format(weight[i])+",");
+        }
+        System.out.println();
     }
 
     /**
@@ -409,6 +414,7 @@ public abstract class KNN {
         double dd = r.nextDouble() * (10.0 - (d + 0.01)) + (d + 0.01);
         return dd;
     }
+
 
     /**
      * decrease the weight.
