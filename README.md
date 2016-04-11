@@ -1,2 +1,1 @@
-# kNN
-Here are some functions we need to implement in kNN algorithm. Also sweta gave me a good idea to use some data structure to store the extracted data.
+This project implemented KNN algorithm to predict the classification of a new customer, predict the binary label whether a new financial product should be introduced and predict the score for a new finanical product to determine whether it should be introduced.
