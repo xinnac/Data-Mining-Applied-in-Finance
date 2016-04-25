@@ -1,8 +1,7 @@
 
 /**
  * this class is to define the sets of Data and values of the Attributes.
- * @author Shapan Dashore (sdashore).
- * @version 1.6.
+ * Created by xinnacai on 4/3/16.
  */
 import java.util.ArrayList;
 import java.util.List;
