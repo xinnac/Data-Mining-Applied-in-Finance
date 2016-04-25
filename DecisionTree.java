@@ -1,8 +1,7 @@
 
 /**
  * This class creates the Decision Tree and also has the cross validation method.
- * @author Shapan Dashore (sdashore).
- * @version 2.5.
+ * Created by xinnacai on 4/6/16.
  */
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
