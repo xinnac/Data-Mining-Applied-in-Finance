@@ -1,7 +1,6 @@
 
 /**
- * @author Shapan Dashore (sdashore).
- * @version 3.2.
+ * Created by xinnacai on 4/3/16.
  */
 import java.util.ArrayList;
 import java.util.Collections;
